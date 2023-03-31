@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 class WordAPITest {
@@ -49,14 +50,21 @@ class WordAPITest {
     }
 
     @Nested
-    inner class AddingWords{
+    inner class AddingRemovingWords{
 
         @Test
         fun `adding a word adds that word`(){
             assertEquals(5,populatedWords!!.numberOfWords())
-            populatedWords!!.addWord(Word("test","test",1,1,"test"))
+            assertTrue(populatedWords!!.addWord(Word("test","test",1,1,"test")))
             assertEquals(6,populatedWords!!.numberOfWords())
 
+        }
+
+        @Test
+        fun `removing a word removes that word`(){
+            assertEquals(5,populatedWords!!.numberOfWords())
+            assertEquals(word2,populatedWords!!.removeWordByIndex(1))
+            assertEquals(4,populatedWords!!.numberOfWords())
         }
 
     }
