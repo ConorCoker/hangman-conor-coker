@@ -1,4 +1,5 @@
-import controllers.WordAPI
+package controllers
+
 import models.Word
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
