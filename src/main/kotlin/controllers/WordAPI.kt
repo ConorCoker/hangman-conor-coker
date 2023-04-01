@@ -12,15 +12,22 @@ class WordAPI {
     private lateinit var gameWordAsCharArray: CharArray
 
 
+    fun addWord(word: Word): Boolean {
+        return if (words.any { it.word.lowercase() == word.word.lowercase() }) {
+            false
+        } else {
+            words.add(word)
+        }
+    }
 
-    fun addWord(word: Word) = words.add(word)
-
+    fun getWords() = words
 
     fun numberOfWords() = words.size
-
     fun removeWordByIndex(indexToRemove: Int) = words.removeAt(indexToRemove)
     fun showAllWords(): String {
-        return words.joinToString(separator = "\n") {
+        return if (words.isEmpty()) {
+            "No saved words"
+        } else words.joinToString(separator = "\n") {
             words.indexOf(it)
                 .toString() + " " + it.word + ", Max Guesses: " + it.maxGuesses + ", Difficulty: " + it.difficulty
         }
@@ -43,8 +50,7 @@ class WordAPI {
         } else null
     }
 
-
-    fun startGame(word:Word){
+    fun startGame(word: Word) {
         gameWord = word
         gameWordAsCharArray = gameWord.word.toCharArray()
         gameWordAsCharArray.forEach { _ -> underscores.add('_') }
