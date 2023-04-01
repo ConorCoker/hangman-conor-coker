@@ -5,7 +5,10 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import utils.Utils
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 
@@ -23,10 +26,22 @@ class WordAPITest {
     @BeforeEach
     fun setUp() {
 
-        word1 = Word("Happy","A good feeling",7,1,"feeling or showing pleasure or contentment")
-        word2 = Word("Friend","Social relationship",8,2,"a person whom one knows and with whom one has a bond of mutual affection, typically exclusive of sexual or family relations")
+        word1 = Word("Happy", "A good feeling", 7, 1, "feeling or showing pleasure or contentment")
+        word2 = Word(
+            "Friend",
+            "Social relationship",
+            8,
+            2,
+            "a person whom one knows and with whom one has a bond of mutual affection, typically exclusive of sexual or family relations"
+        )
         word3 = Word("Delicious", "Taste", 9, 3, "highly pleasant to the taste")
-        word4 = Word("Blue", "Color", 6, 1, "a color intermediate between green and violet, as of the sky or sea on a sunny day")
+        word4 = Word(
+            "Blue",
+            "Color",
+            6,
+            1,
+            "a color intermediate between green and violet, as of the sky or sea on a sunny day"
+        )
         word5 = Word("Funny", "Humor", 7, 2, "causing laughter or amusement; humorous")
 
         populatedWords!!.addWord(word1!!)
@@ -51,21 +66,75 @@ class WordAPITest {
     }
 
     @Nested
-    inner class AddingRemovingWords{
+    inner class AddingRemovingWords {
 
         @Test
-        fun `adding a word adds that word`(){
-            assertEquals(5,populatedWords!!.numberOfWords())
-            assertTrue(populatedWords!!.addWord(Word("test","test",1,1,"test")))
-            assertEquals(6,populatedWords!!.numberOfWords())
+        fun `adding a word adds that word`() {
+            assertEquals(5, populatedWords!!.numberOfWords())
+            assertTrue(populatedWords!!.addWord(Word("test", "test", 1, 1, "test")))
+            assertEquals(6, populatedWords!!.numberOfWords())
 
         }
 
         @Test
-        fun `removing a word removes that word`(){
-            assertEquals(5,populatedWords!!.numberOfWords())
-            assertEquals(word2,populatedWords!!.removeWordByIndex(1))
-            assertEquals(4,populatedWords!!.numberOfWords())
+        fun `adding a duplicate word does not add that word and returns false`() {
+            assertEquals(5, populatedWords!!.numberOfWords())
+            assertEquals(populatedWords!!.getWordByIndex(0)!!.word.lowercase(), "happy")
+            assertFalse(populatedWords!!.addWord(Word("HaPpY", "test", 1, 1, "test")))
+            assertEquals(5, populatedWords!!.numberOfWords())
+        }
+
+        @Test
+        fun `removing a word removes that word`() {
+            assertEquals(5, populatedWords!!.numberOfWords())
+            assertEquals(word2, populatedWords!!.removeWordByIndex(1))
+            assertEquals(4, populatedWords!!.numberOfWords())
+            assertFalse(Utils.checkIsObjectPresent(word2!!, populatedWords!!.getWords()))
+        }
+
+        @Test
+        fun `number of words returns correct number`() {
+            assertEquals(0, emptyWords!!.numberOfWords())
+            assertTrue(emptyWords!!.addWord(word1!!))
+            assertTrue(Utils.checkIsObjectPresent(word1!!, emptyWords!!.getWords()))
+            assertEquals(1, emptyWords!!.numberOfWords())
+        }
+
+    }
+
+    @Nested
+    inner class ListingWords {
+
+        @Test
+        fun `show all words shows all words`() {
+            assertTrue(populatedWords!!.showAllWords().contains("Happy"))
+            assertTrue(populatedWords!!.showAllWords().contains("9"))
+            assertTrue(populatedWords!!.showAllWords().contains("1"))
+        }
+
+        @Test
+        fun `showing all words when there is no words returns No saved words`(){
+            assertEquals(0,emptyWords!!.numberOfWords())
+            assertTrue(emptyWords!!.showAllWords().contains("No saved words"))
+        }
+
+        @Nested
+        inner class GettingWords {
+            @Test
+            fun `getting a random word returns a word`(){
+                assertEquals(word3!!,populatedWords!!.getRandomWord(3))
+            }
+
+            @Test
+            fun `getting a random word when that difficulty is not present returns null`(){
+                assertNull(populatedWords!!.getRandomWord(4))
+            }
+
+            @Test
+            fun `getting a random word by difficulty only returns words of that difficulty`(){
+                val word = populatedWords!!.getRandomWord(2)
+                assertEquals(2,word!!.difficulty)
+            }
         }
 
     }
