@@ -7,9 +7,6 @@ import java.util.Random
 class WordAPI {
 
     private var words = ArrayList<Word>()
-    private var underscores = ArrayList<Char>()
-    private lateinit var gameWord: Word
-    private lateinit var gameWordAsCharArray: CharArray
 
 
     fun addWord(word: Word): Boolean {
@@ -50,14 +47,14 @@ class WordAPI {
         } else null
     }
 
-    fun startGame(word: Word) {
-        gameWord = word
-        gameWordAsCharArray = gameWord.word.toCharArray()
-        gameWordAsCharArray.forEach { _ -> underscores.add('_') }
-    }
-
-    fun printGameWord() = gameWordAsCharArray.joinToString { it.toString() }
-
-    fun printHidden() = underscores.joinToString { it.toString() }
+//    fun startGame(word: Word) {
+//        gameWord = word
+//        gameWordAsCharArray = gameWord.word.toCharArray()
+//        gameWordAsCharArray.forEach { _ -> underscores.add('_') }
+//    }
+//
+//    fun printGameWord() = gameWordAsCharArray.joinToString { it.toString() }
+//
+//    fun printHidden() = underscores.joinToString { it.toString() }
 
 }
