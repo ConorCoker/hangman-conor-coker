@@ -6,8 +6,4 @@ data class Word(
     val maxGuesses: Int,
     val difficulty: Int,
     val definition: String
-) {
-    val guessedLetters = mutableListOf<Char>()
-    var currentGuesses = 0
-    var isSolved = false
-}
+)

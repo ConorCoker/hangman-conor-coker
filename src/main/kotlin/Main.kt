@@ -1,18 +1,23 @@
+import controllers.PlayerAPI
+import models.Game
+import models.Player
 import utils.ScannerInput
 import kotlin.system.exitProcess
 
-fun main(args: Array<String>) {
+val players = PlayerAPI()
 
-    when (displayMenu()) {
-        'a' -> signIn()
-        'b' -> signUp()
-        'c' -> play()
-        'd' -> listAllPlayers()
-        'e' -> listAllSolvedWords()
-        'f' -> showLeaderboard()
-        'g' -> exitProcess(0)
-        else -> displayMenu()
-    }
+fun main(args: Array<String>) {
+    do {
+        when (displayMenu()) {
+            'a' -> signIn()
+            'b' -> signUp()
+            'c' -> listAllPlayers()
+            'd' -> listAllSolvedWords()
+            'e' -> showLeaderboard()
+            'f' -> exitProcess(0)
+            else -> displayMenu()
+        }
+    } while (true)
 }
 
 private fun displayMenu(): Char {
@@ -20,20 +25,15 @@ private fun displayMenu(): Char {
     return ScannerInput.readNextChar(
         """
         >|-------------------------------------|
-        >| a) Sign in                          |
-        >| b) Sign up                          |
-        >| c) Play                             |
-        >| d) List all players                 |            
-        >| e) List all solved words            |
-        >| f) Show Leaderboard                 |
-        >| g) Exit                             |
+        >| a) Sign in and play                 |
+        >| b) Sign up                          |                            
+        >| c) List all players                 |            
+        >| d) List all solved words            |
+        >| e) Show Leaderboard                 |
+        >| f) Exit                             |
         >|-------------------------------------|
         >==>> """.trimMargin(">")
     )
-}
-
-fun play() {
-    TODO("Not yet implemented")
 }
 
 fun showLeaderboard() {
@@ -49,9 +49,29 @@ fun listAllPlayers() {
 }
 
 fun signUp() {
-    TODO("Not yet implemented")
+    if (players.addPlayer(
+            Player(
+                ScannerInput.readNextLine("Please enter a username: "),
+                ScannerInput.readNextLine("Please enter a password: ")
+            )
+        )
+    ) {
+        println("You have successfully signed up!")
+    } else System.err.println("That username is already taken!")
+
 }
 
 fun signIn() {
-    TODO("Not yet implemented")
+    val numOfPlayers = ScannerInput.readNextInt("How many players would you like to play with?: ")
+    for (i in 0 until numOfPlayers) {
+        println("Player ${i+1} login: ")
+        var username = ScannerInput.readNextLine("Please enter your username: ")
+        var password = ScannerInput.readNextLine("Please enter a password: ")
+        while (!players.login(username, password)) {
+            System.err.println("Player ${i+1} username or password is incorrect!")
+            username = ScannerInput.readNextLine("Please enter your username: ")
+            password = ScannerInput.readNextLine("Please enter a password: ")
+        }
+        println("Player ${i+1} has been logged in")
+    }
 }

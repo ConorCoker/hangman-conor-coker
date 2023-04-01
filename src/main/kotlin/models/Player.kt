@@ -1,10 +1,9 @@
 package models
 
 class Player(
-    val name: String
+    val name: String,
+    val password:String,
 ) {
-    var score: Int = 0
-    var totalGuesses: Int = 0
     var wins: Int = 0
     var losses: Int = 0
     var gamesPlayed: Int = 0
