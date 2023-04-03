@@ -6,8 +6,13 @@ import java.util.Random
 
 class WordAPI {
 
-    private var words = ArrayList<Word>()
+    private val words: ArrayList<Word> = ArrayList()
 
+
+
+    init {
+        words.add(Word("hello","",30,1,""))
+    }
 
     fun addWord(word: Word): Boolean {
         return if (words.any { it.word.lowercase() == word.word.lowercase() }) {
@@ -20,7 +25,9 @@ class WordAPI {
     fun getWords() = words
 
     fun numberOfWords() = words.size
+
     fun removeWordByIndex(indexToRemove: Int) = words.removeAt(indexToRemove)
+
     fun showAllWords(): String {
         return if (words.isEmpty()) {
             "No saved words"
@@ -46,15 +53,4 @@ class WordAPI {
             words[index]
         } else null
     }
-
-//    fun startGame(word: Word) {
-//        gameWord = word
-//        gameWordAsCharArray = gameWord.word.toCharArray()
-//        gameWordAsCharArray.forEach { _ -> underscores.add('_') }
-//    }
-//
-//    fun printGameWord() = gameWordAsCharArray.joinToString { it.toString() }
-//
-//    fun printHidden() = underscores.joinToString { it.toString() }
-
 }
