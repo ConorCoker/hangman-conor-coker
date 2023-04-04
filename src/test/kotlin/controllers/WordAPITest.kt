@@ -26,23 +26,22 @@ class WordAPITest {
     @BeforeEach
     fun setUp() {
 
-        word1 = Word("Happy", "A good feeling", 7, 1, "feeling or showing pleasure or contentment")
+        word1 = Word("Happy", "A good feeling", 1,  "feeling or showing pleasure or contentment")
         word2 = Word(
             "Friend",
             "Social relationship",
-            8,
-            2,
+            1,
             "a person whom one knows and with whom one has a bond of mutual affection, typically exclusive of sexual or family relations"
         )
-        word3 = Word("Delicious", "Taste", 9, 3, "highly pleasant to the taste")
+        word3 = Word("Delicious", "Taste", 3,  "highly pleasant to the taste")
         word4 = Word(
             "Blue",
             "Color",
-            6,
-            1,
+            4,
+
             "a color intermediate between green and violet, as of the sky or sea on a sunny day"
         )
-        word5 = Word("Funny", "Humor", 7, 2, "causing laughter or amusement; humorous")
+        word5 = Word("Funny", "Humor", 5,  "causing laughter or amusement; humorous")
 
         populatedWords!!.addWord(word1!!)
         populatedWords!!.addWord(word2!!)
@@ -71,7 +70,7 @@ class WordAPITest {
         @Test
         fun `adding a word adds that word`() {
             assertEquals(5, populatedWords!!.numberOfWords())
-            assertTrue(populatedWords!!.addWord(Word("test", "test", 1, 1, "test")))
+            assertTrue(populatedWords!!.addWord(Word("test", "test", 1,  "test")))
             assertEquals(6, populatedWords!!.numberOfWords())
 
         }
@@ -80,7 +79,7 @@ class WordAPITest {
         fun `adding a duplicate word does not add that word and returns false`() {
             assertEquals(5, populatedWords!!.numberOfWords())
             assertEquals(populatedWords!!.getWordByIndex(0)!!.word.lowercase(), "happy")
-            assertFalse(populatedWords!!.addWord(Word("HaPpY", "test", 1, 1, "test")))
+            assertFalse(populatedWords!!.addWord(Word("HaPpY", "test", 1,  "test")))
             assertEquals(5, populatedWords!!.numberOfWords())
         }
 
@@ -108,8 +107,9 @@ class WordAPITest {
         @Test
         fun `show all words shows all words`() {
             assertTrue(populatedWords!!.showAllWords().contains("Happy"))
-            assertTrue(populatedWords!!.showAllWords().contains("9"))
             assertTrue(populatedWords!!.showAllWords().contains("1"))
+            assertTrue(populatedWords!!.showAllWords().contains("Funny"))
+            assertTrue(populatedWords!!.showAllWords().contains("5"))
         }
 
         @Test
@@ -126,14 +126,14 @@ class WordAPITest {
             }
 
             @Test
-            fun `getting a random word when that difficulty is not present returns null`(){
-                assertNull(populatedWords!!.getRandomWord(4))
+            fun `getting a random word when that difficulty is not present returns a lower difficulty word if present`(){
+                assertTrue(populatedWords!!.getRandomWord(2) == word1 || populatedWords!!.getRandomWord(2) == word2)
             }
 
             @Test
             fun `getting a random word by difficulty only returns words of that difficulty`(){
-                val word = populatedWords!!.getRandomWord(2)
-                assertEquals(2,word!!.difficulty)
+                val word = populatedWords!!.getRandomWord(4)
+                assertEquals(4,word!!.difficulty)
             }
         }
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 
@@ -103,13 +104,6 @@ class PlayerAPITest {
         fun `logging in with incorrect name and password returns false`(){
             assertFalse(populatedPlayers!!.login("Conor","login"))
         }
-
-        @Test
-        fun `logging in adds player to currently playing array`(){
-            populatedPlayers!!.login("Conor","password")
-            assertEquals(1,populatedPlayers!!.getPlayersPlaying().size)
-        }
-
     }
 
     @Nested
@@ -121,6 +115,20 @@ class PlayerAPITest {
             assertEquals(2,populatedPlayers!!.getPlayers().size)
             assertTrue(populatedPlayers!!.getPlayers().contains(player1))
             assertTrue(populatedPlayers!!.getPlayers().contains(player2))
+        }
+
+        @Test
+        fun `getting player by name returns that player or null if invalid name`(){
+            assertEquals(player1,populatedPlayers!!.getPlayerByName("Conor"))
+            assertEquals(player2,populatedPlayers!!.getPlayerByName("Aoife"))
+            assertNull(populatedPlayers!!.getPlayerByName("Invalid Name"))
+        }
+
+        @Test
+        fun `increasing a players score increases that players score`(){
+            assertEquals(0,player1!!.currentScore)
+            assertEquals(1,populatedPlayers!!.increasePlayerScore("Conor"))
+            assertEquals(1,player1!!.currentScore)
         }
 
     }
