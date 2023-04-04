@@ -17,18 +17,36 @@ class PlayerAPI {
 
     fun getPlayers() = players
 
-    fun getPlayersPlaying() = players.filter { it.loggedIn }
-
     fun numberOfPlayers() = players.size
+
+    fun getPlayerByName(name: String) = players.find { it.name == name }
+
+    fun increasePlayerScore(name: String): Int? {
+        val player = getPlayerByName(name)
+        return if (player != null) {
+            player.currentScore++
+            player.currentScore
+        } else {
+            null
+        }
+    }
 
     fun removePlayerByIndex(indexToRemove: Int) = players.removeAt(indexToRemove)
 
     fun login(name: String, password: String): Boolean {
         val player = players.find { it.name == name && it.password == password }
-        return if (player != null) {
+        return if (player!=null){
             player.loggedIn = true
             true
-        } else false
+        }
+        else false
     }
+
+    fun listLoggedInPlayers():String {
+        return players.filter { it.loggedIn }.joinToString(separator = ", ") {
+            it.name
+        }
+    }
+
 
 }

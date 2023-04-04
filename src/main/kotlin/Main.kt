@@ -1,12 +1,14 @@
 import controllers.PlayerAPI
 import controllers.WordAPI
 import models.Game
+import models.GameOverListener
 import models.Player
 import utils.ScannerInput
 import kotlin.system.exitProcess
 
 val players = PlayerAPI()
 val words = WordAPI()
+val loggedIn = ArrayList<String>()
 
 fun main(args: Array<String>) {
     do {
@@ -22,11 +24,9 @@ fun main(args: Array<String>) {
             else -> displayMenu()
         }
     } while (true)
-
-
 }
 
-fun addWord() {
+private fun addWord() {
 
 }
 
@@ -34,8 +34,8 @@ private fun displayMenu(): Char {
 
     return ScannerInput.readNextChar(
         """
-        >|Players in this session :            |
-        >|${players.getPlayersPlaying().size}                                  |
+        >|Players in this session :            
+        >|${players.listLoggedInPlayers()}                                     
         >|-------------------------------------|
         >| a) Sign in                          |
         >| b) Play                             |
@@ -50,40 +50,37 @@ private fun displayMenu(): Char {
     )
 }
 
-fun play() {
-    var word =
-        words
-            .getRandomWord(ScannerInput.readNextInt("What difficulty would you like the word to be? 1 (easy) - 5 (hard)"))
-    if (word == null) {
-        do {
-            word =
-                words
-                    .getRandomWord(ScannerInput.readNextInt("There is no words of that difficulty! Enter a new difficulty or add a word of that difficulty! : "))
-        } while (word == null)
-    }
-    val game = Game(word)
+private fun play() {
+    val game = Game(words, players, ScannerInput.readNextInt("Please enter a difficulty (1-5): "))
     do {
-        for (loggedInPlayer in players.getPlayersPlaying()) {
+        for (player in game.getPlayersPlaying()) {
             println(game.printGameScreen())
-            game.makeGuess(ScannerInput.readNextChar("${loggedInPlayer.name} make your guess: "),loggedInPlayer)
+            game.makeGuess(ScannerInput.readNextChar("${player.name} make your guess: "), player.name)
         }
-    }while (!game.gameOver)
+    } while (!game.isGameOver())
 
+    game.setGameOverListener(object : GameOverListener {
+        override fun onGameOver() {
+            println("Game over")
+
+        }
+    })
 }
 
-fun showLeaderboard() {
+
+private fun showLeaderboard() {
     TODO("Not yet implemented")
 }
 
-fun listAllSolvedWords() {
+private fun listAllSolvedWords() {
     TODO("Not yet implemented")
 }
 
-fun listAllPlayers() {
+private fun listAllPlayers() {
     TODO("Not yet implemented")
 }
 
-fun signUp() {
+private fun signUp() {
     if (players.addPlayer(
             Player(
                 ScannerInput.readNextLine("Please enter a username: "),
@@ -96,11 +93,11 @@ fun signUp() {
 
 }
 
-fun signIn() {
-    var username = ScannerInput.readNextLine("Please enter your username: ")
-    var password = ScannerInput.readNextLine("Please enter a password: ")
-    if (players.login(username, password)) {
+private fun signIn() {
+    val username = ScannerInput.readNextLine("Please enter your username: ")
+    if (players.login(username, ScannerInput.readNextLine("Please enter your password: "))) {
         println("Hi $username you have been logged in!")
-    } else println("Error username of password was incorrect!")
+        loggedIn.add(username)
+    } else System.err.println("Error username of password was incorrect!")
 }
 
