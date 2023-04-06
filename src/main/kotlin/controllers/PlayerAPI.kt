@@ -17,19 +17,11 @@ class PlayerAPI {
 
     fun getPlayers() = players
 
+    fun getLoggedInPlayers() = players.filter { it.loggedIn }
+
     fun numberOfPlayers() = players.size
 
     fun getPlayerByName(name: String) = players.find { it.name == name }
-
-    fun increasePlayerScore(name: String): Int? {
-        val player = getPlayerByName(name)
-        return if (player != null) {
-            player.currentScore++
-            player.currentScore
-        } else {
-            null
-        }
-    }
 
     fun removePlayerByIndex(indexToRemove: Int) = players.removeAt(indexToRemove)
 

@@ -2,6 +2,6 @@ package models
 
 interface GameOverListener {
 
-    fun onGameOver()
+    fun onGameOver(code:Int)
 
 }
