@@ -1,51 +1,41 @@
 package models
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import controllers.PlayerAPI
 import controllers.WordAPI
+import utils.Utils
 
 
-class Game(private val words: WordAPI, private val players: PlayerAPI, difficulty: Int) {
+class Game(private vararg val players: Player, private val word: Word?) {
 
     private var underscores = ArrayList<Char>()
+    private var incorrectGuesses = ArrayList<Char>()
     private var turnsLeft = 6
     private var gameOver = false
     private var gameOverListener: GameOverListener? = null
-    private lateinit var word: Word
-    private var playersInGame = ArrayList<Player>()
-    private var incorrectGuesses = ArrayList<Char>()
+    private var playersAndScores = HashMap<Player, Int>()
 
     init {
-        findPlayersPlaying()
-        getWord(difficulty)
         setupGame()
     }
 
     private fun setupGame() {
 
-        for (letter in word.word) {
-            underscores.add('_')
+        if (word != null) {
+            for (letter in word.word) {
+                underscores.add('_')
+            }
+        } else gameOver = true; gameOverListener?.onGameOver(-999)
+
+        for (player in players) {
+            playersAndScores[player] = 0
         }
     }
-
-    private fun getWord(difficulty: Int) {
-        word = words.getRandomWord(difficulty)
-    }
-
-    private fun findPlayersPlaying() {
-        players.getPlayers().forEach {
-            it.loggedIn
-            playersInGame.add(it)
-        }
-    }
-
-    fun getPlayersPlaying() = playersInGame
-
-    fun isGameOver() = gameOver
 
     fun printGameScreen() = """
         >|              HANGMAN                |
         >|-------------------------------------|            
-        >|${incorrectGuesses}                                  
+        >|${incorrectGuesses}   $playersAndScores                               
         >|${renderMan()}                                    
         >|${underscores.joinToString(separator = " ") { it.toString() }}                   
         >|-------------------------------------|
@@ -53,27 +43,48 @@ class Game(private val words: WordAPI, private val players: PlayerAPI, difficult
 
     fun makeGuess(guess: Char, playerName: String) {
         if (turnsLeft > 1) {
-            if (word.word.contains(guess, true)) {
-                if (underscores.contains(guess)) {
-                    for (i in underscores.indexOf(guess) until underscores.size) {
-                        if (word.word[i] == guess && underscores[i] == '_') {
+            if (word!!.word.contains(guess, true)) {
+                if (Utils.charListContainsIgnoreCase(underscores,guess)) {
+                    for (i in Utils.indexOfCharIgnoreCase(underscores,guess) until underscores.size) {
+                        if (word.word[i].lowercase() == guess.lowercase() && underscores[i] == '_') {
                             underscores[i] = guess
+                            playersAndScores[players.find { it.name == playerName }!!] =
+                                playersAndScores[players.find { it.name == playerName }]!! + 1
                             break
                         }
                     }
                 } else {
-                    underscores[word.word.indexOf(guess)] = guess
+                    underscores[word.word.lowercase().indexOf(guess.lowercase())] = guess
+                    playersAndScores[players.find { it.name == playerName }!!] =
+                        playersAndScores[players.find { it.name == playerName }]!! + 1
                 }
-                players.increasePlayerScore(playerName)
+                if (isSolved()) {
+                    updatePlayerStats(1)
+                    gameOver = true
+                    gameOverListener?.onGameOver(1)
+                }
             } else {
                 turnsLeft--
                 incorrectGuesses.add(guess)
             }
         } else {
+            updatePlayerStats(0)
             gameOver = true
-            gameOverListener?.onGameOver()
+            gameOverListener?.onGameOver(0)
         }
     }
+
+
+    private fun updatePlayerStats(code: Int) {
+        playersAndScores.keys.forEach { playerHashMap ->
+            players.find { it.name == playerHashMap.name }!!.updateStats(code, playersAndScores[playerHashMap]!!)
+        }
+    }
+
+
+    fun isGameOver() = gameOver
+
+    fun isSolved() = !underscores.any { it == '_' }
 
     fun setGameOverListener(listener: GameOverListener) {
         this.gameOverListener = listener
@@ -136,25 +147,22 @@ class Game(private val words: WordAPI, private val players: PlayerAPI, difficult
             |
         """.trimIndent()
 
-            else -> """
-            _________
-            |         |
-            |         O
-            |        /|\
-            |        / \
-            |     GAME OVER
-        """.trimIndent()
+            else -> ""
         }
+
 
     //testing methods
 
     fun getUnderscores() = underscores
 
-    fun getCurrentScore(name: String) = players.getPlayerByName(name)!!.currentScore
-
     fun getGameWord() = word
 
     fun getIncorrectGuesses() = incorrectGuesses
+
+    fun numOfRemainingGuesses() = turnsLeft
+
+    fun getScores() = playersAndScores
+
 
 }
 

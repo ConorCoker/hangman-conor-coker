@@ -83,7 +83,6 @@ class PlayerAPITest {
             assertEquals(0, player1!!.highestScore)
             assertEquals(0, player1!!.losses)
             assertEquals(0, player1!!.wins)
-            assertEquals(0.0, player1!!.averageGuessesPerGame)
         }
 
         @Test
@@ -124,12 +123,7 @@ class PlayerAPITest {
             assertNull(populatedPlayers!!.getPlayerByName("Invalid Name"))
         }
 
-        @Test
-        fun `increasing a players score increases that players score`(){
-            assertEquals(0,player1!!.currentScore)
-            assertEquals(1,populatedPlayers!!.increasePlayerScore("Conor"))
-            assertEquals(1,player1!!.currentScore)
-        }
+
 
     }
 }

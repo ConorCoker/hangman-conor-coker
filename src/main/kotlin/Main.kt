@@ -3,6 +3,7 @@ import controllers.WordAPI
 import models.Game
 import models.GameOverListener
 import models.Player
+import models.Word
 import utils.ScannerInput
 import kotlin.system.exitProcess
 
@@ -51,20 +52,42 @@ private fun displayMenu(): Char {
 }
 
 private fun play() {
-    val game = Game(words, players, ScannerInput.readNextInt("Please enter a difficulty (1-5): "))
+    val game = Game(*players.getLoggedInPlayers().toTypedArray(), word = words.getRandomWord(ScannerInput.readNextInt("Please enter a difficulty (1-5): ")))
+    game.setGameOverListener(object : GameOverListener {
+        override fun onGameOver(code:Int) {
+            when (code) {
+                1 ->
+                    println("winner")
+
+
+                0 -> {
+                    System.err.println(
+                        """
+            _________
+            |         |
+            |         O
+            |        /|\
+            |        / \ 
+            |GAME OVER.. The word was ${game.getGameWord()!!.word}
+        """.trimIndent()
+                    )
+                }
+                else -> println("no words found")
+            }
+
+        }
+    })
+
     do {
-        for (player in game.getPlayersPlaying()) {
+        if (game.isGameOver()) {
+            break
+        }
+        for (player in players.getLoggedInPlayers()) {
             println(game.printGameScreen())
             game.makeGuess(ScannerInput.readNextChar("${player.name} make your guess: "), player.name)
         }
     } while (!game.isGameOver())
 
-    game.setGameOverListener(object : GameOverListener {
-        override fun onGameOver() {
-            println("Game over")
-
-        }
-    })
 }
 
 

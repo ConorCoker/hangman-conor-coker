@@ -27,28 +27,20 @@ class WordAPI {
             "No saved words"
         } else words.joinToString(separator = "\n") {
             words.indexOf(it)
-                .toString() + " " + it.word +", Difficulty: " + it.difficulty
+                .toString() + " " + it.word + ", Difficulty: " + it.difficulty
         }
     }
 
-    fun getRandomWord(difficulty: Int): Word {
-        val random = Random()
-        val filteredList = words.filter { it.difficulty == difficulty }
-        if (filteredList.isNotEmpty()){
-            return filteredList[random.nextInt(filteredList.size)]
-        } else {
-            val lowerDifficulty = difficulty - 1
-            if (lowerDifficulty > 0) {
-                return getRandomWord(lowerDifficulty)
-            } else {
-                val higherDifficulty = difficulty + 1
-                if (words.any { it.difficulty == higherDifficulty }) {
-                    return getRandomWord(higherDifficulty)
-                }
-            }
-        }
-        return words[random.nextInt(words.size)]
+    fun getRandomWord(difficulty: Int): Word? {
+        return if (words.isNotEmpty()) {
+            val random = Random()
+            val filteredList = words.filter { difficulty == it.difficulty }
+            if (filteredList.isNotEmpty()){
+                filteredList[random.nextInt(filteredList.size)]
+            }else words[random.nextInt(words.size)]
+        } else null
     }
+
 
     fun getWordByIndex(index: Int): Word? {
         return if (Utils.isValidIndex(index, words)) {
@@ -56,7 +48,7 @@ class WordAPI {
         } else null
     }
 
-    init {
+//    init {
 //        words.add(
 //            Word(
 //                "computer",
@@ -163,4 +155,3 @@ class WordAPI {
 //        )
 //    }
     }
-}
