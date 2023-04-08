@@ -17,19 +17,15 @@ fun main(args: Array<String>) {
             'a' -> signIn()
             'b' -> play()
             'c' -> signUp()
-            'd' -> addWord()
+            'd' -> listAllPlayers()
             'e' -> listAllSolvedWords()
-            'f' -> listAllPlayers()
-            'g' -> showLeaderboard()
-            'h' -> exitProcess(0)
+            'f' -> showLeaderboard()
+            'g' -> exitProcess(0)
             else -> displayMenu()
         }
     } while (true)
 }
 
-private fun addWord() {
-
-}
 
 private fun displayMenu(): Char {
 
@@ -40,18 +36,18 @@ private fun displayMenu(): Char {
         >|-------------------------------------|
         >| a) Sign in                          |
         >| b) Play                             |
-        >| c) Sign up                          |
-        >| d) Add a word                       |                            
-        >| e) List all players                 |            
-        >| f) List all solved words            |
-        >| g) Show Leaderboard                 |
-        >| h) Exit                             |
+        >| c) Sign up                          |                        
+        >| d) List all players                 |            
+        >| e) List all solved words            |
+        >| f) Show Leaderboard                 |
+        >| g) Exit                             |
         >|-------------------------------------|
         >==>> """.trimMargin(">")
     )
 }
 
 private fun play() {
+    words.loadWords()
     val game = Game(*players.getLoggedInPlayers().toTypedArray(), word = words.getRandomWord(ScannerInput.readNextInt("Please enter a difficulty (1-5): ")))
     game.setGameOverListener(object : GameOverListener {
         override fun onGameOver(code:Int) {
@@ -92,15 +88,15 @@ private fun play() {
 
 
 private fun showLeaderboard() {
-    TODO("Not yet implemented")
+    println(players.getLeaderboard())
 }
 
 private fun listAllSolvedWords() {
-    TODO("Not yet implemented")
+    println(words.listAllSolvedWords())
 }
 
 private fun listAllPlayers() {
-    TODO("Not yet implemented")
+    println(players.listAllPlayers())
 }
 
 private fun signUp() {

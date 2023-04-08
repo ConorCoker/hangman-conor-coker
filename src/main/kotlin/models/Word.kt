@@ -5,4 +5,6 @@ data class Word(
     val hint: String,
     val difficulty: Int,
     val definition: String
-)
+){
+    var solved = false
+}

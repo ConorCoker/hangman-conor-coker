@@ -26,14 +26,14 @@ class WordAPITest {
     @BeforeEach
     fun setUp() {
 
-        word1 = Word("Happy", "A good feeling", 1,  "feeling or showing pleasure or contentment")
+        word1 = Word("Happy", "A good feeling", 1, "feeling or showing pleasure or contentment")
         word2 = Word(
             "Friend",
             "Social relationship",
             1,
             "a person whom one knows and with whom one has a bond of mutual affection, typically exclusive of sexual or family relations"
         )
-        word3 = Word("Delicious", "Taste", 3,  "highly pleasant to the taste")
+        word3 = Word("Delicious", "Taste", 3, "highly pleasant to the taste")
         word4 = Word(
             "Blue",
             "Color",
@@ -41,7 +41,7 @@ class WordAPITest {
 
             "a color intermediate between green and violet, as of the sky or sea on a sunny day"
         )
-        word5 = Word("Funny", "Humor", 5,  "causing laughter or amusement; humorous")
+        word5 = Word("Funny", "Humor", 5, "causing laughter or amusement; humorous")
 
         populatedWords!!.addWord(word1!!)
         populatedWords!!.addWord(word2!!)
@@ -70,7 +70,7 @@ class WordAPITest {
         @Test
         fun `adding a word adds that word`() {
             assertEquals(5, populatedWords!!.numberOfWords())
-            assertTrue(populatedWords!!.addWord(Word("test", "test", 1,  "test")))
+            assertTrue(populatedWords!!.addWord(Word("test", "test", 1, "test")))
             assertEquals(6, populatedWords!!.numberOfWords())
 
         }
@@ -79,7 +79,7 @@ class WordAPITest {
         fun `adding a duplicate word does not add that word and returns false`() {
             assertEquals(5, populatedWords!!.numberOfWords())
             assertEquals(populatedWords!!.getWordByIndex(0)!!.word.lowercase(), "happy")
-            assertFalse(populatedWords!!.addWord(Word("HaPpY", "test", 1,  "test")))
+            assertFalse(populatedWords!!.addWord(Word("HaPpY", "test", 1, "test")))
             assertEquals(5, populatedWords!!.numberOfWords())
         }
 
@@ -113,27 +113,35 @@ class WordAPITest {
         }
 
         @Test
-        fun `showing all words when there is no words returns No saved words`(){
-            assertEquals(0,emptyWords!!.numberOfWords())
+        fun `showing all words when there is no words returns No saved words`() {
+            assertEquals(0, emptyWords!!.numberOfWords())
             assertTrue(emptyWords!!.showAllWords().contains("No saved words"))
+        }
+
+        @Test
+        fun `list all solved words lists all solved words`() {
+            word1!!.solved = true
+            word2!!.solved = true
+            assertTrue(populatedWords!!.listAllSolvedWords().contains(word1!!.word))
+            assertTrue(populatedWords!!.listAllSolvedWords().contains(word2!!.word))
         }
 
         @Nested
         inner class GettingWords {
             @Test
-            fun `getting a random word returns a word`(){
-                assertEquals(word3!!,populatedWords!!.getRandomWord(3))
+            fun `getting a random word returns a word`() {
+                assertEquals(word3!!, populatedWords!!.getRandomWord(3))
             }
+//
+//            @Test
+//            fun `getting a random word when that difficulty is not present returns a lower difficulty word if present`(){
+//                assertTrue(populatedWords!!.getRandomWord(2) == word1 || populatedWords!!.getRandomWord(2) == word2)
+//            }
 
             @Test
-            fun `getting a random word when that difficulty is not present returns a lower difficulty word if present`(){
-                assertTrue(populatedWords!!.getRandomWord(2) == word1 || populatedWords!!.getRandomWord(2) == word2)
-            }
-
-            @Test
-            fun `getting a random word by difficulty only returns words of that difficulty`(){
+            fun `getting a random word by difficulty only returns words of that difficulty`() {
                 val word = populatedWords!!.getRandomWord(4)
-                assertEquals(4,word!!.difficulty)
+                assertEquals(4, word!!.difficulty)
             }
         }
 

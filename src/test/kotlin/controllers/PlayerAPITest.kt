@@ -126,4 +126,35 @@ class PlayerAPITest {
 
 
     }
+
+    @Nested
+    inner class ListingPlayers{
+
+        @Test
+        fun `list all players lists all players`(){
+            assertTrue(populatedPlayers!!.listAllPlayers().contains(player1!!.name))
+            assertTrue(populatedPlayers!!.listAllPlayers().contains(player2!!.name))
+        }
+
+        @Test
+        fun `list all players returns no players when there is no players`(){
+            assertTrue(emptyPlayers!!.getPlayers().isEmpty())
+            assertTrue(emptyPlayers!!.listAllPlayers().contains("No players in system!"))
+        }
+
+        @Test
+        fun `list all logged in players lists all players that are logged in`(){
+            player1!!.loggedIn=true
+            assertTrue(populatedPlayers!!.listLoggedInPlayers().contains(player1!!.name))
+            assertTrue(!populatedPlayers!!.listLoggedInPlayers().contains(player2!!.name))
+
+        }
+
+        @Test
+        fun `list all logged in players returns no logged in players when there is no players logged in`(){
+            assertEquals("No logged in players!",populatedPlayers!!.listLoggedInPlayers())
+            assertTrue(emptyPlayers!!.listLoggedInPlayers().contains("No players in system!"))
+        }
+
+    }
 }

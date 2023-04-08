@@ -61,6 +61,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
                 if (isSolved()) {
                     updatePlayerStats(1)
                     gameOver = true
+                    word.solved = true
                     gameOverListener?.onGameOver(1)
                 }
             } else {
