@@ -28,6 +28,10 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
+}
+
 kotlin {
     jvmToolchain(8)
 }
