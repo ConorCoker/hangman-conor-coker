@@ -48,7 +48,11 @@ class WordAPI {
         } else null
     }
 
-    fun listAllSolvedWords() = words.filter { it.solved }.joinToString(separator = "\n") { it.word }
+    fun listAllSolvedWords():String{
+       return  if (words.any { it.solved }){
+           words.filter { it.solved }.joinToString(separator = "\n") { it.word }
+       }else "No words have been solved!"
+    }
 
     fun loadWords() {
         words.add(

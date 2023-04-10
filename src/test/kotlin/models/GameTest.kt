@@ -245,6 +245,40 @@ class GameTest {
 
         }
 
+        @Test
+        fun `word is set to solved on game win`(){
+            assertFalse(game3!!.isSolved())
+            assertFalse(game3!!.getGameWord()!!.solved)
+            game3!!.makeGuess('c',"Aoife")
+            game3!!.makeGuess('o',"Aoife")
+            game3!!.makeGuess('m',"Aoife")
+            game3!!.makeGuess('p',"Aoife")
+            game3!!.makeGuess('u',"Aoife")
+            game3!!.makeGuess('t',"Aoife")
+            game3!!.makeGuess('e',"Aoife")
+            game3!!.makeGuess('r',"Aoife")
+            assertTrue(game3!!.isSolved())
+            assertTrue(game3!!.getGameWord()!!.solved)
+            assertTrue(game3!!.isGameOver())
+        }
+
+        @Test
+        fun `game is set to finished but word remains unsolved on loss`(){
+            assertFalse(game2!!.isGameOver())
+            assertFalse(game2!!.isSolved())
+            assertFalse(game2!!.getGameWord()!!.solved)
+            game2!!.makeGuess('i',"Aoife")
+            game2!!.makeGuess('d',"Aoife")
+            game2!!.makeGuess('j',"Aoife")
+            game2!!.makeGuess('b',"Aoife")
+            game2!!.makeGuess('x',"Aoife")
+            assertEquals(1,game2!!.numOfRemainingGuesses())
+            game2!!.makeGuess('z',"Aoife")
+            assertTrue(game2!!.isGameOver())
+            assertFalse(game2!!.isSolved())
+            assertFalse(game2!!.getGameWord()!!.solved)
+        }
+
     }
 
 

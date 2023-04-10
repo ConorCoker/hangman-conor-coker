@@ -1,6 +1,8 @@
 package controllers
 
+import models.Game
 import models.Player
+import models.Word
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -15,6 +17,7 @@ class PlayerAPITest {
 
     private var player1: Player? = null
     private var player2: Player? = null
+    private var game: Game? = null
 
     private var emptyPlayers: PlayerAPI? = PlayerAPI()
     private var populatedPlayers: PlayerAPI? = PlayerAPI()
@@ -28,6 +31,8 @@ class PlayerAPITest {
         populatedPlayers!!.addPlayer(player1!!)
         populatedPlayers!!.addPlayer(player2!!)
 
+        game = Game(player1!!,word = Word("Test","Test",1,"Test"))
+
 
     }
 
@@ -38,6 +43,8 @@ class PlayerAPITest {
 
         emptyPlayers = null
         populatedPlayers = null
+
+        game = null
     }
 
 
@@ -149,11 +156,84 @@ class PlayerAPITest {
             assertTrue(!populatedPlayers!!.listLoggedInPlayers().contains(player2!!.name))
 
         }
-
         @Test
         fun `list all logged in players returns no logged in players when there is no players logged in`(){
             assertEquals("No logged in players!",populatedPlayers!!.listLoggedInPlayers())
             assertTrue(emptyPlayers!!.listLoggedInPlayers().contains("No players in system!"))
+        }
+
+        @Test
+        fun `get leaderboard returns leaderboard with content when players are present`(){
+            assertTrue(populatedPlayers!!.getPlayers().isNotEmpty())
+            assertTrue(populatedPlayers!!.getLeaderboard().contains("|Name: Conor|Games Played: 0|Wins: 0|Losses: 0|Highest Score: 0|"))
+            assertTrue(populatedPlayers!!.getLeaderboard().contains("|Name: Aoife|Games Played: 0|Wins: 0|Losses: 0|Highest Score: 0|"))
+            game!!.makeGuess('e',"Conor")
+            game!!.makeGuess('t',"Conor")
+            game!!.makeGuess('s',"Conor")
+            game!!.makeGuess('t',"Conor")
+            assertTrue(populatedPlayers!!.getLeaderboard().contains("|Name: Conor|Games Played: 1|Wins: 1|Losses: 0|Highest Score: 4|"))
+            assertTrue(populatedPlayers!!.getLeaderboard().contains("|Name: Aoife|Games Played: 0|Wins: 0|Losses: 0|Highest Score: 0|"))
+        }
+
+        @Test
+        fun `get leaderboard returns no players in system message when no players active`(){
+            assertTrue(emptyPlayers!!.getPlayers().isEmpty())
+            assertEquals("No players in system!",emptyPlayers!!.getLeaderboard())
+        }
+
+    }
+
+    @Nested
+    inner class UpdatingPlayers{
+
+        @Test
+        fun`updating a player will update the player correctly`(){
+            assertEquals("Conor",player1!!.name)
+            assertEquals("password",player1!!.password)
+            assertTrue(populatedPlayers!!.updateAccountDetails(player1!!,"updated name","updated password"))
+            assertEquals("updated password",player1!!.password)
+            assertEquals("updated name",player1!!.name)
+        }
+
+        @Test
+        fun`trying to update a player not in list returns false`(){
+            assertFalse(populatedPlayers!!.updateAccountDetails(Player("name","password"),"new name","new password"))
+        }
+
+        @Test
+        fun`updating a player with a already present name returns false and does not update player`(){
+            assertEquals("Aoife",player2!!.name)
+            assertFalse(populatedPlayers!!.updateAccountDetails(player2!!,"cOnOr","password"))
+            assertEquals("Aoife",player2!!.name)
+            assertEquals("12345",player2!!.password)
+        }
+
+    }
+
+    @Nested
+    inner class DeletingPlayers{
+
+        @Test
+        fun`deleting a player deletes that player and returns 1`(){
+            assertEquals(2,populatedPlayers!!.numberOfPlayers())
+            assertEquals(1,populatedPlayers!!.deleteAccount("Conor","password"))
+            assertEquals(1,populatedPlayers!!.numberOfPlayers())
+            assertFalse(populatedPlayers!!.listAllPlayers().contains("Conor"))
+        }
+
+        @Test
+        fun `deleting a valid player but invalid password does not delete player and returns 0`(){
+            assertEquals(2,populatedPlayers!!.numberOfPlayers())
+            assertEquals(0,populatedPlayers!!.deleteAccount("Aoife","incorrect"))
+            assertEquals(2,populatedPlayers!!.numberOfPlayers())
+            assertTrue(populatedPlayers!!.listAllPlayers().contains("Aoife"))
+        }
+
+        @Test
+        fun `deleting a invalid player returns -1`(){
+            assertEquals(2,populatedPlayers!!.numberOfPlayers())
+            assertEquals(-1,populatedPlayers!!.deleteAccount("invalid","account"))
+            assertEquals(2,populatedPlayers!!.numberOfPlayers())
         }
 
     }
