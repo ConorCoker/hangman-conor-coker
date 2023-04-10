@@ -1,8 +1,8 @@
 package models
 
 class Player(
-    val name: String,
-    val password: String,
+    var name: String,
+    var password: String,
 ) {
     var loggedIn = false
     var wins: Int = 0

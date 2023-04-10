@@ -1,10 +1,6 @@
 package models
 
-import com.sun.org.apache.xpath.internal.operations.Bool
-import controllers.PlayerAPI
-import controllers.WordAPI
 import utils.Utils
-
 
 class Game(private vararg val players: Player, private val word: Word?) {
 
@@ -35,7 +31,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
     fun printGameScreen() = """
         >|              HANGMAN                |
         >|-------------------------------------|            
-        >|${incorrectGuesses}   $playersAndScores                               
+        >|${incorrectGuesses}   ${displayUsersAndScores()}                               
         >|${renderMan()}                                    
         >|${underscores.joinToString(separator = " ") { it.toString() }}                   
         >|-------------------------------------|
@@ -44,8 +40,8 @@ class Game(private vararg val players: Player, private val word: Word?) {
     fun makeGuess(guess: Char, playerName: String) {
         if (turnsLeft > 1) {
             if (word!!.word.contains(guess, true)) {
-                if (Utils.charListContainsIgnoreCase(underscores,guess)) {
-                    for (i in Utils.indexOfCharIgnoreCase(underscores,guess) until underscores.size) {
+                if (Utils.charListContainsIgnoreCase(underscores, guess)) {
+                    for (i in Utils.indexOfCharIgnoreCase(underscores, guess) until underscores.size) {
                         if (word.word[i].lowercase() == guess.lowercase() && underscores[i] == '_') {
                             underscores[i] = guess
                             playersAndScores[players.find { it.name == playerName }!!] =
@@ -79,6 +75,13 @@ class Game(private vararg val players: Player, private val word: Word?) {
     private fun updatePlayerStats(code: Int) {
         playersAndScores.keys.forEach { playerHashMap ->
             players.find { it.name == playerHashMap.name }!!.updateStats(code, playersAndScores[playerHashMap]!!)
+        }
+    }
+
+    private fun displayUsersAndScores() {
+        var str = ""
+        playersAndScores.forEach { (t, u) ->
+            str += "${t.name} | $u"
         }
     }
 

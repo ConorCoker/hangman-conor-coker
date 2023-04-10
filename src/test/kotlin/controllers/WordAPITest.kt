@@ -6,10 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import utils.Utils
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 
 class WordAPITest {
@@ -126,22 +123,29 @@ class WordAPITest {
             assertTrue(populatedWords!!.listAllSolvedWords().contains(word2!!.word))
         }
 
+        @Test
+        fun `list all solved words returns no words have been solved string if no words were solved`() {
+            assertTrue(populatedWords!!.listAllSolvedWords().contains("No words have been solved!"))
+        }
+
         @Nested
         inner class GettingWords {
             @Test
             fun `getting a random word returns a word`() {
                 assertEquals(word3!!, populatedWords!!.getRandomWord(3))
             }
-//
-//            @Test
-//            fun `getting a random word when that difficulty is not present returns a lower difficulty word if present`(){
-//                assertTrue(populatedWords!!.getRandomWord(2) == word1 || populatedWords!!.getRandomWord(2) == word2)
-//            }
 
             @Test
             fun `getting a random word by difficulty only returns words of that difficulty`() {
                 val word = populatedWords!!.getRandomWord(4)
                 assertEquals(4, word!!.difficulty)
+            }
+
+            @Test
+            fun `getting a random word will still return a word if that difficulty is not present`(){
+                val word = populatedWords!!.getRandomWord(2)
+                assertNotNull(word)
+                assertFalse(word.difficulty==2)
             }
         }
 
