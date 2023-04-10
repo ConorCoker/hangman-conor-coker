@@ -27,6 +27,5 @@ object Utils {
     @JvmStatic
     fun checkIsUniqueName(name: String, list: List<Player>) = !list.any {
         it.name.lowercase() == name.lowercase()
-
     }
 }

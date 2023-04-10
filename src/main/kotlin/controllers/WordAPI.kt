@@ -41,17 +41,16 @@ class WordAPI {
         } else null
     }
 
-
     fun getWordByIndex(index: Int): Word? {
         return if (Utils.isValidIndex(index, words)) {
             words[index]
         } else null
     }
 
-    fun listAllSolvedWords():String{
-       return  if (words.any { it.solved }){
-           words.filter { it.solved }.joinToString(separator = "\n") { it.word }
-       }else "No words have been solved!"
+    fun listAllSolvedWords(): String {
+        return if (words.any { it.solved }) {
+            words.filter { it.solved }.joinToString(separator = "\n") { it.word }
+        } else "No words have been solved!"
     }
 
     fun loadWords() {
@@ -161,4 +160,3 @@ class WordAPI {
         )
     }
 }
-

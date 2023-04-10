@@ -31,7 +31,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
     fun printGameScreen() = """
         >|              HANGMAN                |
         >|-------------------------------------|            
-        >|${incorrectGuesses}   ${displayUsersAndScores()}                               
+        >|$incorrectGuesses   ${displayUsersAndScores()}                               
         >|${renderMan()}                                    
         >|${underscores.joinToString(separator = " ") { it.toString() }}                   
         >|-------------------------------------|
@@ -71,7 +71,6 @@ class Game(private vararg val players: Player, private val word: Word?) {
         }
     }
 
-
     private fun updatePlayerStats(code: Int) {
         playersAndScores.keys.forEach { playerHashMap ->
             players.find { it.name == playerHashMap.name }!!.updateStats(code, playersAndScores[playerHashMap]!!)
@@ -85,7 +84,6 @@ class Game(private vararg val players: Player, private val word: Word?) {
         }
     }
 
-
     fun isGameOver() = gameOver
 
     fun isSolved() = !underscores.any { it == '_' }
@@ -93,7 +91,6 @@ class Game(private vararg val players: Player, private val word: Word?) {
     fun setGameOverListener(listener: GameOverListener) {
         this.gameOverListener = listener
     }
-
 
     private fun renderMan() =
         when (turnsLeft) {
@@ -104,7 +101,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |         
             |        
             |
-        """.trimIndent()
+            """.trimIndent()
 
             5 -> """
             _________
@@ -113,7 +110,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |         
             |        
             |
-        """.trimIndent()
+            """.trimIndent()
 
             4 -> """
             _________
@@ -122,7 +119,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |         |
             |         
             |
-        """.trimIndent()
+            """.trimIndent()
 
             3 -> """
             _________
@@ -131,7 +128,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |        /|
             |        
             |
-        """.trimIndent()
+            """.trimIndent()
 
             2 -> """
             _________
@@ -140,7 +137,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |        /|\
             |        
             |
-        """.trimIndent()
+            """.trimIndent()
 
             1 -> """
             _________
@@ -149,13 +146,12 @@ class Game(private vararg val players: Player, private val word: Word?) {
             |        /|\
             |        /
             |
-        """.trimIndent()
+            """.trimIndent()
 
             else -> ""
         }
 
-
-    //testing methods
+    // testing methods
 
     fun getUnderscores() = underscores
 
@@ -166,11 +162,4 @@ class Game(private vararg val players: Player, private val word: Word?) {
     fun numOfRemainingGuesses() = turnsLeft
 
     fun getScores() = playersAndScores
-
-
 }
-
-
-
-
-

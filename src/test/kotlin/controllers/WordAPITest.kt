@@ -6,8 +6,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import utils.Utils
-import kotlin.test.*
-
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class WordAPITest {
 
@@ -45,8 +47,6 @@ class WordAPITest {
         populatedWords!!.addWord(word3!!)
         populatedWords!!.addWord(word4!!)
         populatedWords!!.addWord(word5!!)
-
-
     }
 
     @AfterEach
@@ -69,7 +69,6 @@ class WordAPITest {
             assertEquals(5, populatedWords!!.numberOfWords())
             assertTrue(populatedWords!!.addWord(Word("test", "test", 1, "test")))
             assertEquals(6, populatedWords!!.numberOfWords())
-
         }
 
         @Test
@@ -95,7 +94,6 @@ class WordAPITest {
             assertTrue(Utils.checkIsObjectPresent(word1!!, emptyWords!!.getWords()))
             assertEquals(1, emptyWords!!.numberOfWords())
         }
-
     }
 
     @Nested
@@ -142,12 +140,11 @@ class WordAPITest {
             }
 
             @Test
-            fun `getting a random word will still return a word if that difficulty is not present`(){
+            fun `getting a random word will still return a word if that difficulty is not present`() {
                 val word = populatedWords!!.getRandomWord(2)
                 assertNotNull(word)
-                assertFalse(word.difficulty==2)
+                assertFalse(word.difficulty == 2)
             }
         }
-
     }
 }

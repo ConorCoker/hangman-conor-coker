@@ -10,7 +10,7 @@ val players = PlayerAPI()
 val words = WordAPI()
 val loggedIn = ArrayList<String>()
 
-fun main(args: Array<String>) {
+fun main() {
     do {
         when (displayMenu()) {
             'a' -> signIn()
@@ -80,7 +80,6 @@ private fun play() {
 |   the word "${game.getGameWord()!!.word}"!"""
                     )
 
-
                 0 -> {
                     System.err.println(
                         """
@@ -90,7 +89,7 @@ private fun play() {
             |        /|\
             |        / \ 
             |GAME OVER.. The word was ${game.getGameWord()!!.word}
-        """.trimIndent()
+                        """.trimIndent()
                     )
                 }
 
@@ -113,37 +112,37 @@ private fun play() {
 private fun signUp() {
     if (players.addPlayer(
             Player(
-                ScannerInput.readNextLine("Please enter a username: "),
-                ScannerInput.readNextLine("Please enter a password: ")
-            )
+                    ScannerInput.readNextLine("Please enter a username: "),
+                    ScannerInput.readNextLine("Please enter a password: ")
+                )
         )
     ) {
         println("You have successfully signed up!")
     } else System.err.println("That username is already taken!")
-
 }
 
 private fun updateAccount() {
-    when (players.updateAccountDetails(
-        players.getPlayerByName(ScannerInput.readNextLine("Enter your current name: ")),
-        ScannerInput.readNextLine("Enter your new name: "),
-        ScannerInput.readNextLine("Enter your new password: ")
-    )) {
+    when (
+        players.updateAccountDetails(
+            players.getPlayerByName(ScannerInput.readNextLine("Enter your current name: ")),
+            ScannerInput.readNextLine("Enter your new name: "),
+            ScannerInput.readNextLine("Enter your new password: ")
+        )
+    ) {
         true -> println("Your account was updated successfully")
         false -> println("Something went wrong! Please check your username and password again!")
     }
 }
 
 private fun deleteAccount() {
-    when (players.deleteAccount(
-        ScannerInput.readNextLine("Enter the name of your account that you want to delete: "),
-        ScannerInput.readNextLine("Enter your password: ")
-    )) {
+    when (
+        players.deleteAccount(
+            ScannerInput.readNextLine("Enter the name of your account that you want to delete: "),
+            ScannerInput.readNextLine("Enter your password: ")
+        )
+    ) {
         1 -> println("Your account was deleted!")
         0 -> System.err.println("Your password was incorrect!")
         -1 -> System.err.println("We could not find that account!")
     }
 }
-
-
-
