@@ -10,7 +10,6 @@ class Player(
     var gamesPlayed: Int = 0
     var highestScore: Int = 0
 
-
     fun updateStats(code: Int, score: Int) {
         when (code) {
             0 -> {

@@ -20,7 +20,7 @@ class GameTest {
     private var player1: Player? = null
     private var player2: Player? = null
 
-    private var players:PlayerAPI? = null
+    private var players: PlayerAPI? = null
 
     @BeforeEach
     fun setup() {
@@ -44,7 +44,8 @@ class GameTest {
             )
         )
         game2 = Game(
-            player1!!, player2!!, word = Word(
+            player1!!, player2!!,
+            word = Word(
                 "Hangman",
                 "A game involving a man",
                 2,
@@ -52,7 +53,8 @@ class GameTest {
             )
         )
         game3 = Game(
-            player1!!, player2!!, word = Word(
+            player1!!, player2!!,
+            word = Word(
                 "Computer",
                 "An electronic device for processing data",
                 3,
@@ -60,7 +62,8 @@ class GameTest {
             )
         )
         game4 = Game(
-            player1!!, player2!!, word = Word(
+            player1!!, player2!!,
+            word = Word(
                 "Chimpanzee",
                 "A great ape native to Africa",
                 4,
@@ -68,7 +71,8 @@ class GameTest {
             )
         )
         game5 = Game(
-            player1!!, player2!!, word = Word(
+            player1!!, player2!!,
+            word = Word(
                 "Mississippi",
                 "A state in the southern region of the United States",
                 5,
@@ -87,7 +91,6 @@ class GameTest {
 
         player1 = null
         player2 = null
-
     }
 
     @Nested
@@ -120,7 +123,6 @@ class GameTest {
             assertEquals(1, game2!!.getScores()[player1])
         }
 
-
         @Test
         fun `making an incorrect guess adds that to incorrect letters array`() {
             assertEquals(0, game3!!.getIncorrectGuesses().size)
@@ -131,8 +133,8 @@ class GameTest {
 
         @Test
         fun `letters can be guessed more than once in words with duplicate letters`() {
-            //testing word with two repeating letters
-            //Chimpanzee
+            // testing word with two repeating letters
+            // Chimpanzee
             assertEquals(0, game4!!.getScores()[player1])
             assertEquals("[_, _, _, _, _, _, _, _, _, _]", game4!!.getUnderscores().toString())
             game4!!.makeGuess('e', "Conor")
@@ -142,7 +144,7 @@ class GameTest {
             assertEquals("[_, _, _, _, _, _, _, _, e, e]", game4!!.getUnderscores().toString())
             assertEquals(2, game4!!.getScores()[player1])
 
-            //testing word with 4 repeating letters with "Mississippi"
+            // testing word with 4 repeating letters with "Mississippi"
             assertEquals("[_, _, _, _, _, _, _, _, _, _, _]", game5!!.getUnderscores().toString())
             game5!!.makeGuess('s', "Aoife")
             assertEquals("[_, _, s, _, _, _, _, _, _, _, _]", game5!!.getUnderscores().toString())
@@ -152,13 +154,11 @@ class GameTest {
             assertEquals("[_, _, s, s, _, s, _, _, _, _, _]", game5!!.getUnderscores().toString())
             game5!!.makeGuess('s', "Aoife")
             assertEquals("[_, _, s, s, _, s, s, _, _, _, _]", game5!!.getUnderscores().toString())
-
-
         }
 
         @Test
         fun `wrong answers take away a turn and when no turns remaining game over is true`() {
-            //Mississippi
+            // Mississippi
             assertFalse(game5!!.isGameOver())
             assertEquals(6, game5!!.numOfRemainingGuesses())
             assertEquals(0, game5!!.getScores()[player1])
@@ -177,8 +177,6 @@ class GameTest {
             assertTrue(game5!!.isGameOver())
             assertEquals(1, player1!!.gamesPlayed)
         }
-
-
     }
 
     @Nested
@@ -212,74 +210,70 @@ class GameTest {
             game2!!.makeGuess('a', "Conor")
             game2!!.makeGuess('n', "Conor")
             assertEquals(7, game2!!.getScores()[player1])
-            assertEquals("[H, a, n, g, M, a, n]",game2!!.getUnderscores().toString())
+            assertEquals("[H, a, n, g, M, a, n]", game2!!.getUnderscores().toString())
             assertTrue(game2!!.isSolved())
-            assertEquals(0,player1!!.losses)
-            assertEquals(1,player1!!.wins)
-            assertEquals(1,players!!.getPlayers()[0].gamesPlayed)
+            assertEquals(0, player1!!.losses)
+            assertEquals(1, player1!!.wins)
+            assertEquals(1, players!!.getPlayers()[0].gamesPlayed)
             assertTrue(game2!!.isGameOver())
         }
 
         @Test
-        fun `player stats are updated successfully on a game loss`(){
-            //Computer
+        fun `player stats are updated successfully on a game loss`() {
+            // Computer
             assertFalse(game3!!.isGameOver())
             assertFalse(game3!!.isSolved())
-            assertEquals(0,player2!!.highestScore)
-            game3!!.makeGuess('o',"Aoife")
+            assertEquals(0, player2!!.highestScore)
+            game3!!.makeGuess('o', "Aoife")
             assertEquals(1, game3!!.getScores()[player2!!])
-            assertEquals(6,game3!!.numOfRemainingGuesses())
-            game3!!.makeGuess('s',"Aoife")
-            game3!!.makeGuess('h',"Aoife")
-            game3!!.makeGuess('q',"Aoife")
-            game3!!.makeGuess('v',"Aoife")
-            game3!!.makeGuess('b',"Aoife")
-            assertEquals(1,game3!!.numOfRemainingGuesses())
+            assertEquals(6, game3!!.numOfRemainingGuesses())
+            game3!!.makeGuess('s', "Aoife")
+            game3!!.makeGuess('h', "Aoife")
+            game3!!.makeGuess('q', "Aoife")
+            game3!!.makeGuess('v', "Aoife")
+            game3!!.makeGuess('b', "Aoife")
+            assertEquals(1, game3!!.numOfRemainingGuesses())
             assertFalse(game3!!.isGameOver())
             assertFalse(game3!!.isSolved())
-            game3!!.makeGuess('x',"Aoife")
+            game3!!.makeGuess('x', "Aoife")
             assertTrue(game3!!.isGameOver())
-            assertEquals(1,player2!!.highestScore)
-            assertEquals(0,player2!!.wins)
-            assertEquals(1,player2!!.gamesPlayed)
-
+            assertEquals(1, player2!!.highestScore)
+            assertEquals(0, player2!!.wins)
+            assertEquals(1, player2!!.gamesPlayed)
         }
 
         @Test
-        fun `word is set to solved on game win`(){
+        fun `word is set to solved on game win`() {
             assertFalse(game3!!.isSolved())
             assertFalse(game3!!.getGameWord()!!.solved)
-            game3!!.makeGuess('c',"Aoife")
-            game3!!.makeGuess('o',"Aoife")
-            game3!!.makeGuess('m',"Aoife")
-            game3!!.makeGuess('p',"Aoife")
-            game3!!.makeGuess('u',"Aoife")
-            game3!!.makeGuess('t',"Aoife")
-            game3!!.makeGuess('e',"Aoife")
-            game3!!.makeGuess('r',"Aoife")
+            game3!!.makeGuess('c', "Aoife")
+            game3!!.makeGuess('o', "Aoife")
+            game3!!.makeGuess('m', "Aoife")
+            game3!!.makeGuess('p', "Aoife")
+            game3!!.makeGuess('u', "Aoife")
+            game3!!.makeGuess('t', "Aoife")
+            game3!!.makeGuess('e', "Aoife")
+            game3!!.makeGuess('r', "Aoife")
             assertTrue(game3!!.isSolved())
             assertTrue(game3!!.getGameWord()!!.solved)
             assertTrue(game3!!.isGameOver())
         }
 
         @Test
-        fun `game is set to finished but word remains unsolved on loss`(){
+        fun `game is set to finished but word remains unsolved on loss`() {
             assertFalse(game2!!.isGameOver())
             assertFalse(game2!!.isSolved())
             assertFalse(game2!!.getGameWord()!!.solved)
-            game2!!.makeGuess('i',"Aoife")
-            game2!!.makeGuess('d',"Aoife")
-            game2!!.makeGuess('j',"Aoife")
-            game2!!.makeGuess('b',"Aoife")
-            game2!!.makeGuess('x',"Aoife")
-            assertEquals(1,game2!!.numOfRemainingGuesses())
-            game2!!.makeGuess('z',"Aoife")
+            game2!!.makeGuess('i', "Aoife")
+            game2!!.makeGuess('d', "Aoife")
+            game2!!.makeGuess('j', "Aoife")
+            game2!!.makeGuess('b', "Aoife")
+            game2!!.makeGuess('x', "Aoife")
+            assertEquals(1, game2!!.numOfRemainingGuesses())
+            game2!!.makeGuess('z', "Aoife")
             assertTrue(game2!!.isGameOver())
             assertFalse(game2!!.isSolved())
             assertFalse(game2!!.getGameWord()!!.solved)
         }
-
     }
-
-
 }

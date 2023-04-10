@@ -60,7 +60,6 @@ class PlayerAPI {
         return if (players.isNotEmpty()) {
             players.joinToString(separator = "\n") { "|Name: ${it.name}|Games Played: ${it.gamesPlayed}|Wins: ${it.wins}|Losses: ${it.losses}|Highest Score: ${it.highestScore}|" }
         } else "No players in system!"
-
     }
 
     fun updateAccountDetails(player: Player?, name: String, password: String): Boolean {
@@ -72,16 +71,16 @@ class PlayerAPI {
                     true
                 } else false
             } else false
-        }else false
+        } else false
     }
 
-    fun deleteAccount(name:String,password:String):Int{
+    fun deleteAccount(name: String, password: String): Int {
         val player = players.find { it.name.lowercase() == name.lowercase() }
-        return if (player!=null){
-            if (password==player.password){
+        return if (player != null) {
+            if (password == player.password) {
                 players.remove(player)
-                1 //if success
+                1 // if success
             } else 0 // if password wrong
-        } else -1 //if player dont exist
+        } else -1 // if player dont exist
     }
 }
