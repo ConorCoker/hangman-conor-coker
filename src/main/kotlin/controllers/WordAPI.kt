@@ -4,10 +4,18 @@ import models.Word
 import utils.Utils
 import java.util.Random
 
+/**
+ * This class represents an API for managing a list of [Word] objects.
+ */
 class WordAPI {
 
     private val words: ArrayList<Word> = ArrayList()
 
+    /**
+     * Adds a new [Word] to the list of words if it doesn't already exist.
+     *
+     * @return `true` if the word was added successfully, `false` otherwise.
+     */
     fun addWord(word: Word): Boolean {
         return if (words.any { it.word.lowercase() == word.word.lowercase() }) {
             false
@@ -16,12 +24,33 @@ class WordAPI {
         }
     }
 
+    /**
+     * Gets all the [Word] objects in the list.
+     *
+     * @return a list of [Word] objects.
+     */
     fun getWords() = words
 
+    /**
+     * Gets the number of [Word] objects in the list.
+     *
+     * @return the number of words in the list.
+     */
     fun numberOfWords() = words.size
 
+    /**
+     * Removes a [Word] object from the list by its index.
+     *
+     * @param indexToRemove the index of the word to remove.
+     * @return the removed [Word] object.
+     */
     fun removeWordByIndex(indexToRemove: Int) = words.removeAt(indexToRemove)
 
+    /**
+     * Gets a string representation of all the [Word] objects in the list.
+     *
+     * @return a string representing all the words in the list.
+     */
     fun showAllWords(): String {
         return if (words.isEmpty()) {
             "No saved words"
@@ -31,6 +60,13 @@ class WordAPI {
         }
     }
 
+    /**
+     * Gets a random [Word] object from the list that matches the specified difficulty level.
+     * If there are no words with the specified difficulty level, a random word is returned.
+     *
+     * @param difficulty the difficulty level of the word to get.
+     * @return a [Word] object that matches the specified difficulty level, or `null` if the list is empty.
+     */
     fun getRandomWord(difficulty: Int): Word? {
         return if (words.isNotEmpty()) {
             val random = Random()
@@ -41,17 +77,32 @@ class WordAPI {
         } else null
     }
 
+    /**
+     * Gets a [Word] object from the list by its index.
+     *
+     * @param index the index of the word to get.
+     * @return the [Word] object at the specified index, or `null` if the index is invalid.
+     */
     fun getWordByIndex(index: Int): Word? {
         return if (Utils.isValidIndex(index, words)) {
             words[index]
         } else null
     }
 
+    /**
+     * Gets a string representation of all the solved [Word] objects in the list.
+     *
+     * @return a string representing all the solved words in the list.
+     */
     fun listAllSolvedWords(): String {
         return if (words.any { it.solved }) {
             words.filter { it.solved }.joinToString(separator = "\n") { it.word }
         } else "No words have been solved!"
     }
+
+    /**
+     * Loads a set of default [Word] objects into the list.
+     */
 
     fun loadWords() {
         words.add(
