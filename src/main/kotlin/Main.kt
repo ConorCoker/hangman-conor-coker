@@ -79,18 +79,18 @@ private fun signIn() {
  * Starts the game with the selected word and the list of logged in users.
  */
 private fun play() {
-   if (loggedIn.isNotEmpty()){
-       words.loadWords()
-       val game = Game(
-           *players.getLoggedInPlayers().toTypedArray(),
-           word = words.getRandomWord(ScannerInput.readNextInt("Please enter a difficulty (1-5): "))
-       )
-       game.setGameOverListener(object : GameOverListener {
-           override fun onGameOver(code: Int) {
-               when (code) {
-                   1 ->
-                       println(
-                           """ ___________________________________
+    if (loggedIn.isNotEmpty()) {
+        words.loadWords()
+        val game = Game(
+            *players.getLoggedInPlayers().toTypedArray(),
+            word = words.getRandomWord(ScannerInput.readNextInt("Please enter a difficulty (1-5): "))
+        )
+        game.setGameOverListener(object : GameOverListener {
+            override fun onGameOver(code: Int) {
+                when (code) {
+                    1 ->
+                        println(
+                            """ ___________________________________
 |                                   |
 |                                   |
 |              \O/                  |
@@ -101,36 +101,36 @@ private fun play() {
 |                                   |
 |   You have successfully guessed   |
 |   the word "${game.getGameWord()!!.word}"!"""
-                       )
+                        )
 
-                   0 -> {
-                       System.err.println(
-                           """
+                    0 -> {
+                        System.err.println(
+                            """
             _________
             |         |
             |         O
             |        /|\
             |        / \ 
             |GAME OVER.. The word was ${game.getGameWord()!!.word}                
-                        """.trimIndent()
-                       )
-                   }
+                            """.trimIndent()
+                        )
+                    }
 
-                   else -> System.err.println("ERROR no words are in system!!!")
-               }
-           }
-       })
+                    else -> System.err.println("ERROR no words are in system!!!")
+                }
+            }
+        })
 
-       do {
-           if (game.isGameOver()) {
-               break
-           }
-           for (player in players.getLoggedInPlayers()) {
-               println(game.printGameScreen())
-               game.makeGuess(ScannerInput.readNextChar("${player.name} make your guess: "), player.name)
-           }
-       } while (!game.isGameOver())
-   } else System.err.println("No users are logged in to play!")
+        do {
+            if (game.isGameOver()) {
+                break
+            }
+            for (player in players.getLoggedInPlayers()) {
+                println(game.printGameScreen())
+                game.makeGuess(ScannerInput.readNextChar("${player.name} make your guess: "), player.name)
+            }
+        } while (!game.isGameOver())
+    } else System.err.println("No users are logged in to play!")
 }
 
 /**
