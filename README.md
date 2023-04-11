@@ -16,7 +16,7 @@ Once you have guessed the word or the hangman has been hung, the game will end a
 
 ## How to play
 
-1.[Clone](https://github.com/ConorCoker/hangman-conor-coker.git) this repository.
+1. [Clone](https://github.com/ConorCoker/hangman-conor-coker.git) this repository.
 2. Run the `main()` function in the `Main.kt` file to start the game.
 
 ## Wiki
