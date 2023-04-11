@@ -13,6 +13,8 @@ import utils.Utils
  * @property gameOver A boolean indicating if the game is over.
  * @property gameOverListener A listener to be called when the game is over.
  * @property playersAndScores A HashMap of the players and their scores in the game.
+ * @property hint A empty string to be filled with words hint if requested by user.
+ * @property definition A empty string to be filled with words definition if requested by user.
  *
  * @constructor Creates a new instance of the Game class.
  *
@@ -21,6 +23,8 @@ import utils.Utils
  */
 class Game(private vararg val players: Player, private val word: Word?) {
 
+    private var hint = ""
+    private var definition = ""
     private var underscores = ArrayList<Char>()
     private var incorrectGuesses = ArrayList<Char>()
     private var turnsLeft = 6
@@ -60,12 +64,16 @@ class Game(private vararg val players: Player, private val word: Word?) {
      * @return A string representation of the game screen.
      */
     fun printGameScreen() = """
-        >|              HANGMAN                |
-        >|-------------------------------------|            
-        >|$incorrectGuesses   ${displayUsersAndScores()}                               
+        >|              HANGMAN                 |
+        >|--------------------------------------|   
+        >|Guess '1' for hint, '2' for definition| 
+        >|$hint 
+        >|$definition                                      
+        >|$incorrectGuesses   
+        >| ${displayUsersAndScores()}                              
         >|${renderMan()}                                    
         >|${underscores.joinToString(separator = " ") { it.toString() }}                   
-        >|-------------------------------------|
+        >|--------------------------------------|
         >==>> """.trimMargin(">")
 
     /**
@@ -76,30 +84,36 @@ class Game(private vararg val players: Player, private val word: Word?) {
      */
     fun makeGuess(guess: Char, playerName: String) {
         if (turnsLeft > 1) {
-            if (word!!.word.contains(guess, true)) {
-                if (Utils.charListContainsIgnoreCase(underscores, guess)) {
-                    for (i in Utils.indexOfCharIgnoreCase(underscores, guess) until underscores.size) {
-                        if (word.word[i].lowercase() == guess.lowercase() && underscores[i] == '_') {
-                            underscores[i] = guess
+            when (guess) {
+                '1' -> hint = word!!.hint
+                '2' -> definition = word!!.definition
+                else -> {
+                    if (word!!.word.contains(guess, true)) {
+                        if (Utils.charListContainsIgnoreCase(underscores, guess)) {
+                            for (i in Utils.indexOfCharIgnoreCase(underscores, guess) until underscores.size) {
+                                if (word.word[i].lowercase() == guess.lowercase() && underscores[i] == '_') {
+                                    underscores[i] = guess
+                                    playersAndScores[players.find { it.name == playerName }!!] =
+                                        playersAndScores[players.find { it.name == playerName }]!! + 1
+                                    break
+                                }
+                            }
+                        } else {
+                            underscores[word.word.lowercase().indexOf(guess.lowercase())] = guess
                             playersAndScores[players.find { it.name == playerName }!!] =
                                 playersAndScores[players.find { it.name == playerName }]!! + 1
-                            break
                         }
+                        if (isSolved()) {
+                            updatePlayerStats(1)
+                            gameOver = true
+                            word.solved = true
+                            gameOverListener?.onGameOver(1)
+                        }
+                    } else {
+                        turnsLeft--
+                        incorrectGuesses.add(guess)
                     }
-                } else {
-                    underscores[word.word.lowercase().indexOf(guess.lowercase())] = guess
-                    playersAndScores[players.find { it.name == playerName }!!] =
-                        playersAndScores[players.find { it.name == playerName }]!! + 1
                 }
-                if (isSolved()) {
-                    updatePlayerStats(1)
-                    gameOver = true
-                    word.solved = true
-                    gameOverListener?.onGameOver(1)
-                }
-            } else {
-                turnsLeft--
-                incorrectGuesses.add(guess)
             }
         } else {
             updatePlayerStats(0)
@@ -125,7 +139,7 @@ class Game(private vararg val players: Player, private val word: Word?) {
     private fun displayUsersAndScores(): String {
         var str = ""
         playersAndScores.forEach { (t, u) ->
-            str += "${t.name} | $u "
+            str += "|${t.name} | $u " + "|"
         }
         return str
     }

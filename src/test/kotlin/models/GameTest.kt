@@ -276,4 +276,31 @@ class GameTest {
             assertFalse(game2!!.getGameWord()!!.solved)
         }
     }
+
+    @Nested
+    inner class GameScreen {
+
+        @Test
+        fun `hint is displayed when prompted`() {
+            assertFalse(game1!!.printGameScreen().contains("To check is something working"))
+            game1!!.makeGuess('1', "Conor")
+            assertTrue(game1!!.printGameScreen().contains("To check is something working"))
+        }
+
+        @Test
+        fun `definition is displayed when prompted`() {
+            assertFalse(game2!!.printGameScreen().contains("a game for two in which one player tries to guess the letters of a word, the other player recording failed attempts by drawing a gallows and someone hanging on it, line by line"))
+            game2!!.makeGuess('2', "Aoife")
+            assertTrue(game2!!.printGameScreen().contains("a game for two in which one player tries to guess the letters of a word, the other player recording failed attempts by drawing a gallows and someone hanging on it, line by line"))
+        }
+
+        @Test
+        fun `scoreboard is updated correctly on each guess`() {
+            assertTrue(game2!!.printGameScreen().contains("Conor | 0"))
+            game2!!.makeGuess('a', "Conor")
+            assertTrue(game2!!.printGameScreen().contains("Conor | 1") && game2!!.printGameScreen().contains("Aoife | 0"))
+            game2!!.makeGuess('n', "Aoife")
+            assertTrue(game2!!.printGameScreen().contains("Conor | 1") && game2!!.printGameScreen().contains("Aoife | 1"))
+        }
+    }
 }

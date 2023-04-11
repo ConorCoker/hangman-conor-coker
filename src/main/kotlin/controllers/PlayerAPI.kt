@@ -163,9 +163,9 @@ class PlayerAPI {
 
     /**
 
-    Retrieves a leaderboard of players.
-    @return A string representing a leaderboard of players, or "No players in system!" if no players in the system.
-    @since 1.0
+     Retrieves a leaderboard of players.
+     @return A string representing a leaderboard of players, or "No players in system!" if no players in the system.
+     @since 1.0
      */
     fun getLeaderboard(): String {
         return if (players.isNotEmpty()) {
@@ -173,4 +173,3 @@ class PlayerAPI {
         } else "No players in system!"
     }
 }
-
